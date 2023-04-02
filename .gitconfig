@@ -3,27 +3,27 @@
 	email = 
 
 [alias]
-	g = git
-	ci = commit -m
-	ca = commit -a
-	ps = "!git push origin $(git rev-parse --abbrev-ref HEAD)"
-	pl = "!git pull origin $(git rev-parse --abbrev-ref HEAD)"
-	s = status
-	br = branch
+	# add conflicted file on merge
+	add-unmerged = "!f() { git ls-files --unmerged | cut -f2 | sort -u ; }; git add `f`"
 	ba = branch -a
 	bm = branch --merged
 	bn = branch --no-merged
+	br = branch
+	ca = commit -a
+	ch = checkout
+	ci = commit -m
+	df = diff
+	dl-merged = git branch --merged master | grep -v '^[ *]*master$' | xargs git branch -d
 	# edit conflicted file on merge
 	edit-unmerged = "!f() { git ls-files --unmerged | cut -f2 | sort -u ; }; vim `f`"
-	# add conflicted file on merge
-	add-unmerged = "!f() { git ls-files --unmerged | cut -f2 | sort -u ; }; git add `f`"
-	open = "!hub browse"
 	hist = log --pretty=format:\"%Cgreen%h %Creset%cd %Cblue[%cn] %Creset%s%C(yellow)%d%C(reset)\" --graph --date=relative --decorate --all
+	mg = merge
 	llog = log --graph --name-status --pretty=format:\"%C(red)%h %C(reset)(%cd) %C(green)%an %Creset%s %C(yellow)%d%Creset\" --date=relative
-	logline = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
-	df= diff
-	mg= merge
-
+	open = "!hub browse"
+	ps = "!git push origin $(git rev-parse --abbrev-ref HEAD)"
+	pl = "!git pull origin $(git rev-parse --abbrev-ref HEAD)"
+	rb = rebase
+	s = status
 [color]
 	status = auto
 	diff = auto
@@ -31,3 +31,13 @@
 	interactive = auto
 	grep = auto
 	ui = auto
+	current = yellow
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+[init]
+	defaultBranch = master
+[fetch]
+	prune = true
